@@ -43,7 +43,17 @@ const Login = () => {
           password: Password,
         })
         .then(function (response) {
-          navigate("/admin");
+          const { token, user } = response.data;
+          localStorage.setItem("token", token);
+          localStorage.setItem("user", JSON.stringify(user));
+
+          const role = JSON.parse(localStorage.getItem("user"));
+          if (role.accountType === "User") {
+            navigate("/home");
+          } else {
+            navigate("/admin");
+          }
+
           console.log(response);
         })
         .catch(function (error) {
