@@ -1,6 +1,7 @@
 import { Menu } from "@mui/icons-material";
 import { styled, alpha } from "@mui/material/styles";
 import axios from "axios";
+import ReactLoading from "react-loading";
 import {
   AppBar,
   Box,
@@ -20,6 +21,9 @@ import InputBase from "@mui/material/InputBase";
 import React, { useEffect, useState } from "react";
 
 const AdminHome = () => {
+  // Store loading indicator status
+  const [Loader, setLoader] = useState();
+
   // Store users
   const [Users, setUsers] = useState([]);
 
@@ -58,6 +62,7 @@ const AdminHome = () => {
         setUsers(response.data.users);
         setPages(parseInt(response.data.total));
         setLimit(parseInt(response.data.limit));
+        setLoader("a");
       })
       .catch(function (error) {
         console.error(error);
@@ -152,26 +157,57 @@ const AdminHome = () => {
                 <TableRow>
                   <TableCell>ID</TableCell>
                   <TableCell>EMAIL</TableCell>
-                  <TableCell align="right">STATUS</TableCell>
+                  <TableCell>STATUS</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {Users.map((row) => (
+                {Loader === "a" ? (
+                  Users.map((row) => (
+                    <TableRow
+                      key={row.name}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row._id}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.email}
+                      </TableCell>
+                      <TableCell>
+                        {row.status === false ? "Pending" : "Active"}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
                   <TableRow
-                    key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {row._id}
+                      <ReactLoading
+                        type="cylon"
+                        color="#333333"
+                        height={100}
+                        width={50}
+                      />
                     </TableCell>
                     <TableCell component="th" scope="row">
-                      {row.email}
+                      <ReactLoading
+                        type="cylon"
+                        color="#333333"
+                        height={100}
+                        width={50}
+                      />
                     </TableCell>
-                    <TableCell align="right">
-                      {row.status === false ? "Pending" : "Active"}
+                    <TableCell sx={{ marginLeft: "100px" }}>
+                      <ReactLoading
+                        type="cylon"
+                        color="#333333"
+                        height={100}
+                        width={50}
+                      />
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
