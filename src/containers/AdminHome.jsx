@@ -1,4 +1,4 @@
-import { Add, Menu } from "@mui/icons-material";
+import { Add } from "@mui/icons-material";
 import { styled, alpha } from "@mui/material/styles";
 import axios from "axios";
 import ReactLoading from "react-loading";
@@ -9,6 +9,7 @@ import {
   Box,
   Fab,
   IconButton,
+  MenuItem,
   Modal,
   Pagination,
   Paper,
@@ -22,6 +23,7 @@ import {
   Toolbar,
   Tooltip,
   Typography,
+  Menu,
 } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import React, { useEffect, useState } from "react";
@@ -48,11 +50,14 @@ const AdminHome = () => {
   // Store searching email address
   const [Email, setEmail] = useState("");
 
-  // Store modal open state
+  // Store modal open and close state
   const [Open, setOpen] = useState(false);
 
   // Store a seleted user information
   const [UserInfo, setUserInfo] = useState([]);
+
+  // Stores menu open and close state
+  const [menu, setMenu] = useState(false);
 
   // Handle pagination
   const handleChange = (event, value) => {
@@ -143,8 +148,9 @@ const AdminHome = () => {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={() => setMenu(true)}
           >
-            <Menu />
+            <Avatar />
           </IconButton>
           <Typography
             variant="h6"
@@ -165,6 +171,22 @@ const AdminHome = () => {
           </Search>
         </Toolbar>
       </AppBar>
+      <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        open={menu}
+        onClose={(e) => setMenu(false)}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem>Logout</MenuItem>
+      </Menu>
       <Box
         sx={{
           display: "flex",
