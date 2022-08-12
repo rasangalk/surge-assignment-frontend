@@ -5,9 +5,11 @@ import ReactLoading from "react-loading";
 
 import {
   AppBar,
+  Avatar,
   Box,
   Fab,
   IconButton,
+  Modal,
   Pagination,
   Paper,
   Table,
@@ -16,6 +18,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Toolbar,
   Tooltip,
   Typography,
@@ -44,6 +47,12 @@ const AdminHome = () => {
 
   // Store searching email address
   const [Email, setEmail] = useState("");
+
+  // Store modal open state
+  const [Open, setOpen] = useState(false);
+
+  // Store a seleted user information
+  const [UserInfo, setUserInfo] = useState([]);
 
   // Handle pagination
   const handleChange = (event, value) => {
@@ -108,7 +117,21 @@ const AdminHome = () => {
     },
   }));
 
+  // Use to navigate between components
   const navigate = useNavigate();
+
+  // Handles getting a single user information after clicking on a row
+  const getUserInfo = (id) => {
+    setOpen(true);
+    axios
+      .get(`http://localhost:2000/api/users/${id}`)
+      .then(function (response) {
+        setUserInfo(response.data.details);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   return (
     <Box>
@@ -142,7 +165,6 @@ const AdminHome = () => {
           </Search>
         </Toolbar>
       </AppBar>
-
       <Box
         sx={{
           display: "flex",
@@ -172,6 +194,7 @@ const AdminHome = () => {
                 {Loader === "a" ? (
                   Users.map((row) => (
                     <TableRow
+                      onClick={() => getUserInfo(row._id)}
                       key={row.name}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
@@ -244,6 +267,93 @@ const AdminHome = () => {
           <Add />
         </Fab>
       </Tooltip>
+
+      <Modal
+        open={Open}
+        onClose={(e) => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        <Box width={400} height={280} bgcolor="white" p={3} borderRadius={5}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            <Avatar></Avatar>
+            <Typography varient="h6" color="gray" textAlign="center">
+              User Information
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              marginBottom: "10px",
+            }}
+          ></Box>
+          <Box></Box>
+          <TextField
+            sx={{ marginRight: "7px", marginBottom: "20px" }}
+            id="outlined-read-only-input"
+            label="First Name"
+            defaultValue={UserInfo.firstName}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            id="outlined-read-only-input"
+            label="Last Name"
+            defaultValue={UserInfo.lastName}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            sx={{ marginRight: "7px", marginBottom: "20px" }}
+            id="outlined-read-only-input"
+            label="Email"
+            defaultValue={UserInfo.email}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            id="outlined-read-only-input"
+            label="DOB"
+            defaultValue={UserInfo.dateOfBirth}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+
+          <TextField
+            sx={{ marginRight: "7px", marginBottom: "50px" }}
+            id="outlined-read-only-input"
+            label="Mobile"
+            defaultValue={UserInfo.mobile}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <TextField
+            id="outlined-read-only-input"
+            label="Status"
+            defaultValue={UserInfo.status === false ? "Pending" : "Active"}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </Box>
+      </Modal>
     </Box>
   );
 };
