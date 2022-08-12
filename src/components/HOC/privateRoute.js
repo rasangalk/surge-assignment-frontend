@@ -3,10 +3,36 @@ import React from "react";
 import { Outlet, Navigate } from "react-router";
 
 /**
- * This function handles the private routings
+ * This functions handles the private routings
  */
-const PrivateWrapper = () => {
+
+// Private wrapper for admin
+const PrivateWrapper = ({ type }) => {
   const token = window.localStorage.getItem("token");
-  return token ? <Outlet /> : <Navigate to="/" replace />;
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  return token && type === user.accountType ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" replace />
+  );
 };
-export default PrivateWrapper;
+
+// Private wrapper for user
+const PrivateWrapper2 = ({ type }) => {
+  const token = window.localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  return token && type === user.accountType ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" replace />
+  );
+};
+
+const PrivateWrappers = {
+  PrivateWrapper,
+  PrivateWrapper2,
+};
+
+export default PrivateWrappers;

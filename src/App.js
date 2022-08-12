@@ -5,6 +5,7 @@ import CreateUser from "./components/CreateUser";
 import UserLandingPage from "./containers/UserLandingPage";
 import UserHome from "./containers/UserHome";
 import PrivateWrapper from "./components/HOC/privateRoute";
+import PrivateWrappers from "./components/HOC/privateRoute";
 
 function App() {
   return (
@@ -12,17 +13,29 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
 
-        <Route path="/admin" element={<PrivateWrapper />}>
+        <Route
+          path="/admin"
+          element={<PrivateWrappers.PrivateWrapper type="Admin" />}
+        >
           <Route path="/admin" element={<AdminHome />} />
         </Route>
 
-        <Route path="/admin/add-user" element={<PrivateWrapper />}>
+        <Route
+          path="/admin/add-user"
+          element={<PrivateWrappers.PrivateWrapper type="Admin" />}
+        >
           <Route path="/admin/add-user" element={<CreateUser />} />
         </Route>
-        <Route path="/home" element={<PrivateWrapper />}>
+        <Route
+          path="/home"
+          element={<PrivateWrappers.PrivateWrapper2 type="User" />}
+        >
           <Route path="/home" element={<UserHome />} />
         </Route>
-        <Route path="/user/landing-page" element={<PrivateWrapper />}>
+        <Route
+          path="/user/landing-page"
+          element={<PrivateWrappers.PrivateWrapper2 type="User" />}
+        >
           <Route path="/user/landing-page" element={<UserLandingPage />} />
         </Route>
       </Routes>
