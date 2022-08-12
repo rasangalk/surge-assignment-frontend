@@ -48,7 +48,9 @@ const Login = () => {
           localStorage.setItem("user", JSON.stringify(user));
 
           const role = JSON.parse(localStorage.getItem("user"));
-          if (role.accountType === "User") {
+          if (role.accountType === "User" && role.status === false) {
+            navigate(`/user/landing-page/${user._id}`);
+          } else if (role.accountType === "User" && role.status === true) {
             navigate("/home");
           } else {
             navigate("/admin");

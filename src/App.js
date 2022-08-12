@@ -4,7 +4,6 @@ import AdminHome from "./containers/AdminHome";
 import CreateUser from "./components/CreateUser";
 import UserLandingPage from "./containers/UserLandingPage";
 import UserHome from "./containers/UserHome";
-import PrivateWrapper from "./components/HOC/privateRoute";
 import PrivateWrappers from "./components/HOC/privateRoute";
 
 function App() {
@@ -33,10 +32,10 @@ function App() {
           <Route path="/home" element={<UserHome />} />
         </Route>
         <Route
-          path="/user/landing-page"
+          path="/user/landing-page/:id"
           element={<PrivateWrappers.PrivateWrapper2 type="User" />}
         >
-          <Route path="/user/landing-page" element={<UserLandingPage />} />
+          <Route path="/user/landing-page/:id" element={<UserLandingPage />} />
         </Route>
       </Routes>
     </div>
