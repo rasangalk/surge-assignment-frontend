@@ -1,10 +1,12 @@
-import { Menu } from "@mui/icons-material";
+import { Add, Menu } from "@mui/icons-material";
 import { styled, alpha } from "@mui/material/styles";
 import axios from "axios";
 import ReactLoading from "react-loading";
+
 import {
   AppBar,
   Box,
+  Fab,
   IconButton,
   Pagination,
   Paper,
@@ -15,10 +17,14 @@ import {
   TableHead,
   TableRow,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import React, { useEffect, useState } from "react";
+
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const AdminHome = () => {
   // Store loading indicator status
@@ -101,6 +107,8 @@ const AdminHome = () => {
       },
     },
   }));
+
+  const navigate = useNavigate();
 
   return (
     <Box>
@@ -213,12 +221,29 @@ const AdminHome = () => {
           </TableContainer>
         </Box>
         <Pagination
-          count={Pages / Limit}
+          count={
+            parseInt(Pages / Limit) % 2 !== 0
+              ? parseInt(Pages / Limit) + 1
+              : parseInt(Pages / Limit)
+          }
           size="small"
           sx={{ marginTop: "50px" }}
           onChange={handleChange}
         />
       </Box>
+      <Tooltip
+        onClick={() => navigate("/admin/add-user")}
+        title="Add User"
+        sx={{
+          position: "fixed",
+          bottom: 20,
+          left: { xs: "calc(50% - 25px)", md: 30 },
+        }}
+      >
+        <Fab color="primary" aria-label="add">
+          <Add />
+        </Fab>
+      </Tooltip>
     </Box>
   );
 };
