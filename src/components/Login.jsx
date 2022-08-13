@@ -51,7 +51,7 @@ const Login = () => {
           if (role.accountType === "User" && role.status === false) {
             navigate(`/user/landing-page/${user._id}`);
           } else if (role.accountType === "User" && role.status === true) {
-            navigate("/home");
+            navigate(`/home/${user._id}`);
           } else {
             navigate("/admin");
           }

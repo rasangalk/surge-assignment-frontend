@@ -26,10 +26,10 @@ function App() {
           <Route path="/admin/add-user" element={<CreateUser />} />
         </Route>
         <Route
-          path="/home"
+          path="/home/:id"
           element={<PrivateWrappers.PrivateWrapper2 type="User" />}
         >
-          <Route path="/home" element={<UserHome />} />
+          <Route path="/home/:id" element={<UserHome />} />
         </Route>
         <Route
           path="/user/landing-page/:id"
