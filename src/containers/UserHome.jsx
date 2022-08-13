@@ -1,4 +1,6 @@
 import { Add } from "@mui/icons-material";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 import ReactLoading from "react-loading";
 import {
   AppBar,
@@ -132,6 +134,7 @@ const UserHome = () => {
       });
   };
 
+  // Handle card view
   const handleCardClick = (e) => {
     axios
       .get(`http://localhost:2000/api/select-note/${e}`)
@@ -161,6 +164,7 @@ const UserHome = () => {
       });
   }, [PageNumber, Reload]);
 
+  // Handles updating a note
   const handleUpdate = () => {
     if (CurrentTitle === "" || CurrentDescription === "") {
       ErrMsg("Please fill required fields!");
@@ -179,6 +183,34 @@ const UserHome = () => {
           ErrMsg("Internal server error!");
         });
     }
+  };
+
+  // Handles deleting a note
+  const handleDelete = () => {
+    setViewModelOpen(false);
+    confirmAlert({
+      message: "Are you sure to delete?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            axios
+              .delete(`http://localhost:2000/api/note/${CuurentId}`)
+              .then(function (response) {
+                Success("Deleted!");
+                setViewModelOpen(false);
+                setReload(true);
+              })
+              .catch(function (error) {
+                ErrMsg("Internal server error!");
+              });
+          },
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
   };
 
   return (
@@ -448,7 +480,12 @@ const UserHome = () => {
           >
             Update
           </Button>
-          <Button fullWidth variant="contained" color="error">
+          <Button
+            fullWidth
+            variant="contained"
+            color="error"
+            onClick={handleDelete}
+          >
             Delete
           </Button>
         </Box>
