@@ -92,7 +92,7 @@ const UserLandingPage = () => {
           console.log(response);
           Success("done!");
           setTimeout(() => {
-            navigate(`/home/${id}`);
+            navigate(`/`);
           }, 2000);
         })
         .catch(function (error) {
