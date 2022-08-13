@@ -55,8 +55,6 @@ const Login = () => {
           } else {
             navigate("/admin");
           }
-
-          console.log(response);
         })
         .catch(function (error) {
           ErrMsg("Please check the email and password!");

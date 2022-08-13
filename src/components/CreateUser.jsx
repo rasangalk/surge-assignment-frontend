@@ -76,7 +76,6 @@ const CreateUser = () => {
             Email,
             Password,
           };
-          console.log(content);
           sendEmail(content).then(navigate("/admin"));
         })
         .catch(function (error) {

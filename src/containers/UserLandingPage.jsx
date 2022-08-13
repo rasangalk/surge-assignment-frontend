@@ -91,7 +91,6 @@ const UserLandingPage = () => {
           status: true,
         })
         .then(function (response) {
-          console.log(response);
           Success("done!");
           setTimeout(() => {
             navigate(`/`);
