@@ -181,7 +181,6 @@ const AdminHome = () => {
         id="demo-positioned-menu"
         aria-labelledby="demo-positioned-button"
         open={menu}
-        onClick={handleLogout}
         onClose={(e) => setMenu(false)}
         anchorOrigin={{
           vertical: "top",
@@ -192,7 +191,7 @@ const AdminHome = () => {
           horizontal: "left",
         }}
       >
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
       <Box
         sx={{

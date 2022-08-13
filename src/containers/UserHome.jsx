@@ -10,6 +10,8 @@ import {
   Grid,
   IconButton,
   InputBase,
+  Menu,
+  MenuItem,
   Modal,
   Pagination,
   TextField,
@@ -96,6 +98,9 @@ const UserHome = () => {
 
   // Stores page reloading status
   const [Reload, setReload] = useState(false);
+
+  // Stores user menu open and close status
+  const [menu, setmenu] = useState(false);
 
   // Handles note creation
   const handleCreateNote = () => {
@@ -213,6 +218,12 @@ const UserHome = () => {
     });
   };
 
+  // Handles to logout user
+  const handleLogout = () => {
+    window.localStorage.clear();
+    window.location.reload(false);
+  };
+
   return (
     <Box>
       <AppBar position="static">
@@ -223,7 +234,7 @@ const UserHome = () => {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
-            // onClick={() => setMenu(true)}
+            onClick={() => setmenu(true)}
           >
             <Avatar />
           </IconButton>
@@ -237,6 +248,22 @@ const UserHome = () => {
           </Typography>
         </Toolbar>
       </AppBar>
+      <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        open={menu}
+        onClose={(e) => setmenu(false)}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      </Menu>
       <ToastContainer />
       <Box sx={{ marginLeft: "30px", marginRight: "30px", marginTop: "90px" }}>
         <Grid container spacing={2}>
