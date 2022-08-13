@@ -16,12 +16,12 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const UserHome = () => {
@@ -51,11 +51,16 @@ const UserHome = () => {
     });
   };
 
+  const navigate = useNavigate();
+
   // Stores all the notes
   const [Notes, setNotes] = useState([]);
 
-  // Stores modal open and close status
+  // Stores note creation modal open and close status
   const [CreateModalOpen, setCreateModalOpen] = useState(false);
+
+  // Stores note view modal open and close status
+  const [ViewModelOpen, setViewModelOpen] = useState(false);
 
   // Stores note title
   const [Title, setTitle] = useState("");
@@ -78,6 +83,18 @@ const UserHome = () => {
   // Stores user id
   const { id } = useParams();
 
+  // Stores selected note id
+  const [CuurentId, setCuurentId] = useState("");
+
+  // Stores selected nore title
+  const [CurrentTitle, setCurrentTitle] = useState("");
+
+  // Stores selected note description
+  const [CurrentDescription, setCurrentDescription] = useState("");
+
+  // Stores page reloading status
+  const [Reload, setReload] = useState(false);
+
   // Handles note creation
   const handleCreateNote = () => {
     if (Title === "" || Description === "") {
@@ -90,12 +107,11 @@ const UserHome = () => {
           description: Description,
         })
         .then(function (response) {
-          console.log(response);
           setCreateModalOpen(false);
           Success("Note created!");
         })
         .catch(function (error) {
-          console.log(error);
+          console.error(error);
           ErrMsg("Internal server error!");
         });
     }
@@ -107,10 +123,24 @@ const UserHome = () => {
     axios
       .get(`http://localhost:2000/api/note/${id}?page=${PageNumber}`)
       .then(function (response) {
-        console.log(response);
         setPages(parseInt(response.data.total));
         setLimit(parseInt(response.data.limit));
         setNotes(response.data.notes);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  };
+
+  const handleCardClick = (e) => {
+    axios
+      .get(`http://localhost:2000/api/select-note/${e}`)
+      .then(function (response) {
+        setCurrentTitle(response.data.details.title);
+        setCurrentDescription(response.data.details.description);
+        setCuurentId(response.data.details._id);
+        setViewModelOpen(true);
+        setReload(false);
       })
       .catch(function (error) {
         console.error(error);
@@ -121,7 +151,6 @@ const UserHome = () => {
     axios
       .get(`http://localhost:2000/api/note/${id}?page=${PageNumber}`)
       .then(function (response) {
-        console.log(response.data.notes);
         setNotes(response.data.notes);
         setPages(parseInt(response.data.total));
         setLimit(parseInt(response.data.limit));
@@ -130,7 +159,27 @@ const UserHome = () => {
       .catch(function (error) {
         console.error(error);
       });
-  }, [PageNumber]);
+  }, [PageNumber, Reload]);
+
+  const handleUpdate = () => {
+    if (CurrentTitle === "" || CurrentDescription === "") {
+      ErrMsg("Please fill required fields!");
+    } else {
+      axios
+        .patch(`http://localhost:2000/api/note/${CuurentId}`, {
+          title: CurrentTitle,
+          description: CurrentDescription,
+        })
+        .then(function (response) {
+          Success("updated!");
+          setViewModelOpen(false);
+          setReload(true);
+        })
+        .catch(function (error) {
+          ErrMsg("Internal server error!");
+        });
+    }
+  };
 
   return (
     <Box>
@@ -164,6 +213,7 @@ const UserHome = () => {
               <Grid item xs={6} md={4} key={note._id}>
                 <Box>
                   <CardContent
+                    onClick={() => handleCardClick(note._id)}
                     sx={{ backgroundColor: "#f7de6f", boxShadow: 11 }}
                   >
                     <Typography
@@ -334,6 +384,72 @@ const UserHome = () => {
 
           <Button fullWidth variant="contained" onClick={handleCreateNote}>
             Create
+          </Button>
+        </Box>
+      </Modal>
+      <Modal
+        open={ViewModelOpen}
+        onClose={(e) => setViewModelOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        <Box width={400} height={450} bgcolor="white" p={3} borderRadius={5}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "10px",
+              marginBottom: "20px",
+            }}
+          >
+            <Typography varient="h6" color="gray" textAlign="center">
+              My Note
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              marginBottom: "10px",
+            }}
+          ></Box>
+          <Box></Box>
+          <TextField
+            fullWidth
+            required
+            label="Title"
+            defaultValue={CurrentTitle}
+            type="text"
+            variant="outlined"
+            onChange={(e) => setCurrentTitle(e.target.value)}
+            sx={{ marginBottom: "15px", marginTop: "5px" }}
+          />
+          <TextField
+            required
+            sx={{ width: "100%", marginBottom: "3rem" }}
+            id="standard-multiline-static"
+            multiline
+            rows={8}
+            defaultValue={CurrentDescription}
+            placeholder="Description *"
+            variant="standard"
+            onChange={(e) => setCurrentDescription(e.target.value)}
+          />
+
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ marginBottom: "10px" }}
+            onClick={handleUpdate}
+          >
+            Update
+          </Button>
+          <Button fullWidth variant="contained" color="error">
+            Delete
           </Button>
         </Box>
       </Modal>
