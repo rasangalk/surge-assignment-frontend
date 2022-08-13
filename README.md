@@ -13,7 +13,7 @@
        email: admin@gmail.com
        pw: admin
 
-# How to work as admmin
+# How to work as admin
 1. after successfully loged-in, all the users are displayed in the admin dashboard
 2. admin can create users by clicking the blue add icon in the bottom left
 3. after creating a user, an email is send by the server mentioning the login link and the temporary password
