@@ -78,6 +78,8 @@ const UserLandingPage = () => {
       ErrMsg("Please enter matching passwords!");
     } else if (Password.length < 6) {
       ErrMsg("Password should contain more than six characters");
+    } else if (MobileNumber.length < 10) {
+      ErrMsg("Invalid mobile number");
     } else {
       axios
         .patch(`http://localhost:2000/api/user/${id}`, {
