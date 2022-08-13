@@ -1,4 +1,5 @@
 import { Add } from "@mui/icons-material";
+import ReactLoading from "react-loading";
 import {
   AppBar,
   Avatar,
@@ -14,7 +15,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -50,6 +51,9 @@ const UserHome = () => {
     });
   };
 
+  // Stores all the notes
+  const [Notes, setNotes] = useState([]);
+
   // Stores modal open and close status
   const [CreateModalOpen, setCreateModalOpen] = useState(false);
 
@@ -58,6 +62,18 @@ const UserHome = () => {
 
   // Stores note description
   const [Description, setDescription] = useState("");
+
+  // Stores number of pages
+  const [Pages, setPages] = useState();
+
+  // Stores note limit in a page
+  const [Limit, setLimit] = useState(6);
+
+  // Stores loading indicator state
+  const [Loader, setLoader] = useState("");
+
+  // Store current page number
+  const [PageNumber, setPageNumber] = useState();
 
   // Stores user id
   const { id } = useParams();
@@ -84,6 +100,37 @@ const UserHome = () => {
         });
     }
   };
+
+  // Handles pagination
+  const handleChange = (event, value) => {
+    setPageNumber(value);
+    axios
+      .get(`http://localhost:2000/api/note/${id}?page=${PageNumber}`)
+      .then(function (response) {
+        console.log(response);
+        setPages(parseInt(response.data.total));
+        setLimit(parseInt(response.data.limit));
+        setNotes(response.data.notes);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:2000/api/note/${id}?page=${PageNumber}`)
+      .then(function (response) {
+        console.log(response.data.notes);
+        setNotes(response.data.notes);
+        setPages(parseInt(response.data.total));
+        setLimit(parseInt(response.data.limit));
+        setLoader("a");
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }, [PageNumber]);
 
   return (
     <Box>
@@ -112,144 +159,133 @@ const UserHome = () => {
       <ToastContainer />
       <Box sx={{ marginLeft: "30px", marginRight: "30px", marginTop: "90px" }}>
         <Grid container spacing={2}>
-          <Grid item xs={6} md={4}>
-            <Box>
-              <CardContent sx={{ backgroundColor: "skyblue", boxShadow: 11 }}>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{ marginBottom: "10px" }}
-                >
-                  Daily Plan
-                </Typography>
-                <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                  nec erat ut mi laoreet ornare. Morbi eget velit et magna
-                  volutpat elementum vel eu mi. Vivamus in vulputate magna.
-                  Vivamus non euismod metus. Mauris varius arcu vitae enim
-                  rhoncus, nec sodales tellus gravida.
-                  <br />
-                  {'"a benevolent smile"'}
-                </Typography>
-              </CardContent>
-            </Box>
-          </Grid>
-          <Grid item xs={6} md={4}>
-            <Box>
-              <CardContent sx={{ backgroundColor: "skyblue", boxShadow: 11 }}>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{ marginBottom: "10px" }}
-                >
-                  Daily Plan
-                </Typography>
-                <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                  nec erat ut mi laoreet ornare. Morbi eget velit et magna
-                  volutpat elementum vel eu mi. Vivamus in vulputate magna.
-                  Vivamus non euismod metus. Mauris varius arcu vitae enim
-                  rhoncus, nec sodales tellus gravida.
-                  <br />
-                  {'"a benevolent smile"'}
-                </Typography>
-              </CardContent>
-            </Box>
-          </Grid>
-          <Grid item xs={6} md={4}>
-            <Box>
-              <CardContent sx={{ backgroundColor: "skyblue", boxShadow: 11 }}>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{ marginBottom: "10px" }}
-                >
-                  Daily Plan
-                </Typography>
-                <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                  nec erat ut mi laoreet ornare. Morbi eget velit et magna
-                  volutpat elementum vel eu mi. Vivamus in vulputate magna.
-                  Vivamus non euismod metus. Mauris varius arcu vitae enim
-                  rhoncus, nec sodales tellus gravida.
-                  <br />
-                  {'"a benevolent smile"'}
-                </Typography>
-              </CardContent>
-            </Box>
-          </Grid>
-          <Grid item xs={6} md={4}>
-            <Box>
-              <CardContent sx={{ backgroundColor: "skyblue", boxShadow: 11 }}>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{ marginBottom: "10px" }}
-                >
-                  Daily Plan
-                </Typography>
-                <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                  nec erat ut mi laoreet ornare. Morbi eget velit et magna
-                  volutpat elementum vel eu mi. Vivamus in vulputate magna.
-                  Vivamus non euismod metus. Mauris varius arcu vitae enim
-                  rhoncus, nec sodales tellus gravida.
-                  <br />
-                  {'"a benevolent smile"'}
-                </Typography>
-              </CardContent>
-            </Box>
-          </Grid>
-          <Grid item xs={6} md={4}>
-            <Box>
-              <CardContent sx={{ backgroundColor: "skyblue", boxShadow: 11 }}>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{ marginBottom: "10px" }}
-                >
-                  Daily Plan
-                </Typography>
-                <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                  nec erat ut mi laoreet ornare. Morbi eget velit et magna
-                  volutpat elementum vel eu mi. Vivamus in vulputate magna.
-                  Vivamus non euismod metus. Mauris varius arcu vitae enim
-                  rhoncus, nec sodales tellus gravida.
-                  <br />
-                  {'"a benevolent smile"'}
-                </Typography>
-              </CardContent>
-            </Box>
-          </Grid>
-          <Grid item xs={6} md={4}>
-            <Box>
-              <CardContent sx={{ backgroundColor: "skyblue", boxShadow: 11 }}>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{ marginBottom: "10px" }}
-                >
-                  Daily Plan
-                </Typography>
-                <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-                  nec erat ut mi laoreet ornare. Morbi eget velit et magna
-                  volutpat elementum vel eu mi. Vivamus in vulputate magna.
-                  Vivamus non euismod metus. Mauris varius arcu vitae enim
-                  rhoncus, nec sodales tellus gravida.
-                  <br />
-                  {'"a benevolent smile"'}
-                </Typography>
-              </CardContent>
-            </Box>
-          </Grid>
+          {Loader === "a" ? (
+            Notes.map((note) => (
+              <Grid item xs={6} md={4} key={note._id}>
+                <Box>
+                  <CardContent
+                    sx={{ backgroundColor: "#f7de6f", boxShadow: 11 }}
+                  >
+                    <Typography
+                      variant="h5"
+                      component="div"
+                      sx={{ marginBottom: "10px" }}
+                    >
+                      {note.title}
+                    </Typography>
+                    <Typography variant="body2">
+                      {note.description}
+                      <br />
+                    </Typography>
+                  </CardContent>
+                </Box>
+              </Grid>
+            ))
+          ) : (
+            <>
+              <Grid item xs={6} md={4}>
+                <Box>
+                  <CardContent
+                    sx={{ backgroundColor: "#f7de6f", boxShadow: 11 }}
+                  >
+                    <Typography
+                      variant="h5"
+                      component="div"
+                      sx={{ marginBottom: "10px" }}
+                    >
+                      <ReactLoading
+                        type="cylon"
+                        color="#333333"
+                        height={100}
+                        width={100}
+                      />
+                    </Typography>
+                    <Typography variant="body2">
+                      <ReactLoading
+                        type="cylon"
+                        color="#333333"
+                        height={20}
+                        width={50}
+                      />
+                      <br />
+                    </Typography>
+                  </CardContent>
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <Box>
+                  <CardContent
+                    sx={{ backgroundColor: "#f7de6f", boxShadow: 11 }}
+                  >
+                    <Typography
+                      variant="h5"
+                      component="div"
+                      sx={{ marginBottom: "10px" }}
+                    >
+                      <ReactLoading
+                        type="cylon"
+                        color="#333333"
+                        height={100}
+                        width={100}
+                      />
+                    </Typography>
+                    <Typography variant="body2">
+                      <ReactLoading
+                        type="cylon"
+                        color="#333333"
+                        height={20}
+                        width={50}
+                      />
+                      <br />
+                    </Typography>
+                  </CardContent>
+                </Box>
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <Box>
+                  <CardContent
+                    sx={{ backgroundColor: "#f7de6f", boxShadow: 11 }}
+                  >
+                    <Typography
+                      variant="h5"
+                      component="div"
+                      sx={{ marginBottom: "10px" }}
+                    >
+                      <ReactLoading
+                        type="cylon"
+                        color="#333333"
+                        height={100}
+                        width={100}
+                      />
+                    </Typography>
+                    <Typography variant="body2">
+                      <ReactLoading
+                        type="cylon"
+                        color="#333333"
+                        height={20}
+                        width={50}
+                      />
+                      <br />
+                    </Typography>
+                  </CardContent>
+                </Box>
+              </Grid>
+            </>
+          )}
         </Grid>
       </Box>
       <Box
         sx={{ display: "flex", justifyContent: "center", marginTop: "40px" }}
       >
-        <Pagination count={10} size="small" />
+        <Pagination
+          size="small"
+          count={
+            parseInt(Pages / Limit) % 6 !== 0
+              ? parseInt(Pages / Limit)
+              : parseInt(Pages / Limit) + 1
+          }
+          onChange={handleChange}
+        />
       </Box>
       <Modal
         open={CreateModalOpen}
